@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Audio</title>
+    <link rel="stylesheet" href="audio.css">
+</head>
+<body>
+<a href="https://github.com/jplayer/jPlayer" target="_blank" rel="noopener noreferrer">jPlayer</a>
+<a href="https://github.com/goldfire/howler.js/#quick-start" target="_blank" rel="noopener noreferrer">howler.js</a>
+<a href="https://github.com/goldfire/howler.js/blob/master/examples/player/player.js" target="_blank" rel="noopener noreferrer">example howler.js</a>
+
+    <div class="audio-player">
+
+        <!-- <div class="audio-vializ" style="transform: scale(0.7);">
+            <svg class="audio-vizual__circle"  version="1.1"
+                xmlns="http://www.w3.org/2000/svg">
+                <circle cx="60" cy="60" r="50" fill="none" stroke="black" stroke-width="3" stroke-dasharray="313"; stroke-dashoffset= "313"; />
+            </svg>
+        </div> -->
+        <div class="audio-player-container">
+            <div class="audio-player-nav">
+                <button class="audio-player-nav__play">play</button>
+                <button class="audio-player-nav__pause">pause</button>
+                <button class="audio-player-nav__prev">prev</button>
+                <div class="audio-player__progress"></div>
+                
+                <button class="audio-player-nav__next">next</button>
+            </div>
+        </div>
+        <div class="audio-player__progress-full"></div>
+        <ul class="audio-list">
+            <li>
+                <div class="audio-player" data-audio="1.mp3">
+                    <button class="audio-player__play">play</button>
+                    <button class="audio-player__pause">pause</button>
+                </div>
+            </li>
+            <li>
+                <div class="audio-player" data-audio="2.mp3">
+                    <button class="audio-player__play">play</button>
+                    <button class="audio-player__pause">pause</button>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="audio-player-volume volume">
+        <div id="barFull" class="volume-bar-full bar"></div>
+        <div id="barEmpty" class="volume-bar-empty bar"></div>
+        <div id="sliderBtn" class="volume-bar-slider"></div>
+    </div>
+
+<script src="./js/howler.min.js"></script>
+<script src="./js/audio.js"></script>
+</body>
+</html>

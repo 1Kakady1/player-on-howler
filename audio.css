@@ -1,0 +1,47 @@
+.audio-player__progress{
+    background-color: black;
+    height: 2px;
+}
+.audio-player__progress-full{
+    background-color: black;
+    height: 2px;
+    width: 100%;
+}
+
+#sliderBtn {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 50%;
+    left: 93.25%;
+    margin: -25px auto;
+    background-color: rgba(255,255,255,.8);
+    box-shadow: 1px 1px 5px rgba(0,0,0,.33);
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+#barEmpty {
+    width: 90%;
+    opacity: .5;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.bar {
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    margin: -5px auto;
+    height: 10px;
+    background-color: rgba(212, 23, 23, 0.9);
+    box-shadow: 1px 1px 2px rgba(0,0,0,.33);
+}
+.volume{
+    position: absolute;
+    width: 100%;
+}
+
+#barFull {
+    width: 90%;
+}
