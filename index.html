@@ -11,46 +11,78 @@
 <a href="https://github.com/jplayer/jPlayer" target="_blank" rel="noopener noreferrer">jPlayer</a>
 <a href="https://github.com/goldfire/howler.js/#quick-start" target="_blank" rel="noopener noreferrer">howler.js</a>
 <a href="https://github.com/goldfire/howler.js/blob/master/examples/player/player.js" target="_blank" rel="noopener noreferrer">example howler.js</a>
+    <div class="container">
+        <div class="audio-player" style="background-image: url(./img/prew.jpg);">
 
-    <div class="audio-player">
-
-        <!-- <div class="audio-vializ" style="transform: scale(0.7);">
-            <svg class="audio-vizual__circle"  version="1.1"
-                xmlns="http://www.w3.org/2000/svg">
-                <circle cx="60" cy="60" r="50" fill="none" stroke="black" stroke-width="3" stroke-dasharray="313"; stroke-dashoffset= "313"; />
-            </svg>
-        </div> -->
-        <div class="audio-player-container">
-            <div class="audio-player-nav">
-                <button class="audio-player-nav__play">play</button>
-                <button class="audio-player-nav__pause">pause</button>
-                <button class="audio-player-nav__prev">prev</button>
-                <div class="audio-player__progress"></div>
+            <!-- <div class="audio-vializ" style="transform: scale(0.7);">
+                <svg class="audio-vizual__circle"  version="1.1"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="60" cy="60" r="50" fill="none" stroke="black" stroke-width="3" stroke-dasharray="313"; stroke-dashoffset= "313"; />
+                </svg>
+            </div> -->
+            <div class="audio-player-container">
+                <div class="audio-player-nav">
+    
+                    <div class="audio-player-nav-top">
+                        <button class="audio-player-nav__play">play</button>
+                        <button class="audio-player-nav__pause">pause</button>
+                    </div>
+                    
+                    <div class="audio-player-nav-bottom">
+                        <button class="audio-player-nav__prev">
+                            <svg viewBox="0 0 34 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M33.412 38.908C33.0588 39.0652 32.6441 39.0233 32.3373 38.8166L5.01212 20.3194C4.77378 20.1584 4.62601 19.9028 4.62478 19.6377C4.62358 19.3792 4.77146 19.1113 5.00576 18.9481L32.1607 0.195983C32.3421 0.0724709 32.5693 0.0057006 32.7917 0.00466886L33.2344 0.090236C33.5813 0.231012 33.8001 0.538865 33.8017 0.880582L33.9745 38.1168C33.976 38.4542 33.7601 38.7684 33.412 38.908Z" fill="white"/>
+                                <path d="M7.69228 39.047L0.979251 39.0782C0.536939 39.0802 0.178723 38.6854 0.176508 38.2079L0.00443139 1.11184C0.00217563 0.625548 0.35924 0.227403 0.799025 0.225363L7.51205 0.194223C7.95184 0.192183 8.31259 0.589188 8.31484 1.07329L8.4869 38.1671C8.48913 38.6469 8.12953 39.045 7.69228 39.047Z" fill="white"/>
+                            </svg>
+                        </button>
+    
+                        <div class="audio-player-nav-progress">
+                            <div class="audio-player-time">
+                                <div class="audio-player-time__timer audio-player-time__style">0:00</div>
+                                <div class="audio-player-time__duration audio-player-time__style">0:00</div>
+                            </div>
+                            <div class="audio-player__progress-btn"></div>
+                            <div class="audio-player__progress"></div>
+                            <div class="audio-player__progress-full"></div>
+                        </div>
+        
+                        <button class="audio-player-nav__next">
+                            <svg viewBox="0 0 34 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M33.412 38.908C33.0588 39.0652 32.6441 39.0233 32.3373 38.8166L5.01212 20.3194C4.77378 20.1584 4.62601 19.9028 4.62478 19.6377C4.62358 19.3792 4.77146 19.1113 5.00576 18.9481L32.1607 0.195983C32.3421 0.0724709 32.5693 0.0057006 32.7917 0.00466886L33.2344 0.090236C33.5813 0.231012 33.8001 0.538865 33.8017 0.880582L33.9745 38.1168C33.976 38.4542 33.7601 38.7684 33.412 38.908Z" fill="white"/>
+                                <path d="M7.69228 39.047L0.979251 39.0782C0.536939 39.0802 0.178723 38.6854 0.176508 38.2079L0.00443139 1.11184C0.00217563 0.625548 0.35924 0.227403 0.799025 0.225363L7.51205 0.194223C7.95184 0.192183 8.31259 0.589188 8.31484 1.07329L8.4869 38.1671C8.48913 38.6469 8.12953 39.045 7.69228 39.047Z" fill="white"/>
+                            </svg>
+                                
+                        </button>
+                    </div>
+                </div>
                 
-                <button class="audio-player-nav__next">next</button>
+    
+                <div class="audio-player-volume volume">
+                    <div id="barFull" class="volume-bar-full bar"></div>
+                    <div id="barEmpty" class="volume-bar-empty bar"></div>
+                    <div id="sliderBtn" class="volume-bar-slider"></div>
+                </div>
             </div>
+    
+            
+            <!-- <ul class="audio-list">
+                <li>
+                    <div class="audio-player" data-audio="1.mp3">
+                        <button class="audio-player__play">play</button>
+                        <button class="audio-player__pause">pause</button>
+                    </div>
+                </li>
+                <li>
+                    <div class="audio-player" data-audio="2.mp3">
+                        <button class="audio-player__play">play</button>
+                        <button class="audio-player__pause">pause</button>
+                    </div>
+                </li>
+            </ul> -->
         </div>
-        <div class="audio-player__progress-full"></div>
-        <ul class="audio-list">
-            <li>
-                <div class="audio-player" data-audio="1.mp3">
-                    <button class="audio-player__play">play</button>
-                    <button class="audio-player__pause">pause</button>
-                </div>
-            </li>
-            <li>
-                <div class="audio-player" data-audio="2.mp3">
-                    <button class="audio-player__play">play</button>
-                    <button class="audio-player__pause">pause</button>
-                </div>
-            </li>
-        </ul>
     </div>
-    <div class="audio-player-volume volume">
-        <div id="barFull" class="volume-bar-full bar"></div>
-        <div id="barEmpty" class="volume-bar-empty bar"></div>
-        <div id="sliderBtn" class="volume-bar-slider"></div>
-    </div>
+    
+
 
 <script src="./js/howler.min.js"></script>
 <script src="./js/audio.js"></script>
