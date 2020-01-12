@@ -9,14 +9,15 @@ document.addEventListener('DOMContentLoaded', function(){
       prev_btn = document.querySelector('.audio-player-nav__prev'),
       progress  = document.querySelector('.audio-player__progress'),
       play_to_position = document.querySelector('.audio-player__progress-full'),
+
       barFull = document.querySelector('.volume-bar-full'),
       barEmpty = document.querySelector('.volume-bar-empty'),
       sliderBtn = document.querySelector('.volume-bar-slider'),
-      volume = document.querySelector('.volume'),
+      volume = document.querySelector('#volume'),
+
       duration = document.querySelector('.audio-player-time__duration'),
       timer = document.querySelector('.audio-player-time__timer'),
-      progress_btn = document.querySelector('.audio-player__progress-btn'),
-      event_mouse = "mouseup";
+      progress_btn = document.querySelector('.audio-player__progress-btn');
 
       window.sliderDown= true;
   console.log(window.sliderDown)
@@ -154,10 +155,10 @@ Player.prototype = {
     var sound = self.playlist[self.index].howl;
 
     // Convert the percent into a seek position.
+
     if (sound.playing()) {
       sound.seek(sound.duration() * per);
-      console.log(sound.duration())
-    }
+    } 
   },
   volume: function(val) {
     var self = this;
@@ -166,9 +167,9 @@ Player.prototype = {
     Howler.volume(val);
 
     // Update the display on the slider.
-    var barWidth = (val * 90) / 100;
-    barFull.style.width = (barWidth * 100) + '%';
-    sliderBtn.style.left = (window.innerWidth * barWidth + window.innerWidth * 0.05 - 25) + 'px';
+    //var barWidth = (val * 90) / 100;
+    //barFull.style.width = (barWidth * 100) + '%';
+   // sliderBtn.style.right = (window.innerWidth * barWidth + window.innerWidth * 0.05 - 25) + 'px';
   },
   formatTime: function(secs) {
     var minutes = Math.floor(secs / 60) || 0;
@@ -199,55 +200,44 @@ var player = new Player([
   }
 ]);
 
-play_btn.addEventListener("click",function(){
-  player.play();
-});   
-pause_btn.addEventListener("click",function(){
-player.pause();
-}); 
-next_btn.addEventListener("click",function(){
-player.skip("next");
-}); 
-prev_btn.addEventListener("click",function(){
-player.skip("prev");
+  play_btn.addEventListener("click",function(){
+    player.play();
+  });   
+  pause_btn.addEventListener("click",function(){
+    player.pause();
+  }); 
+  next_btn.addEventListener("click",function(){
+    player.skip("next");
+  }); 
+  prev_btn.addEventListener("click",function(){
+    player.skip("prev");
+  });
+
+  play_to_position.addEventListener("click",function(event){
+    var offswt_x = this.getBoundingClientRect().x;
+    player.seek((event.clientX - offswt_x) /  this.offsetWidth);
+  });
+
+
+  // volume.oninput = function() {
+  //   player.volume(this.value/100);
+  // }
+
+var stepSlider = document.getElementById('audio-player-volume');
+var stepSliderValueElement = document.getElementById('audio-player-volume__size');
+
+noUiSlider.create(stepSlider, {
+    start: [100],
+    step: 0.1,
+    range: {
+        'min': [0],
+        'max': [100]
+    },
+    orientation: 'vertical',
 });
-
-play_to_position.addEventListener("click",function(event){
-  var offswt_x = this.getBoundingClientRect().x;
-  player.seek((event.clientX - offswt_x) /  this.offsetWidth);
+stepSlider.noUiSlider.on('update', function (values, handle) {
+    stepSliderValueElement.innerHTML = Math.trunc(values[handle])+"%";
 });
-
-// document.querySelector(".audio-player").addEventListener("click",function(event){
-// console.log(event.clientX,event.screenX,play_to_position.offsetWidth)
-// });
-
-
-barEmpty.addEventListener('click', function(event) {
-
-var per = event.layerX / parseFloat(barEmpty.scrollWidth);
-player.volume(per);
-});
-
-var move = function(event) {
-if (event_mouse === "mousedown" || event.type === "touchmove") {
-  var x = event.clientX || event.touches[0].clientX;
-  var startX = window.innerWidth * 0.05 ;
-  var layerX = x - startX;
-  var per = Math.min(1, Math.max(0, layerX / parseFloat(barEmpty.scrollWidth)));
-  player.volume(per);
-}
-};
-
-volume.addEventListener('mousedown', function(event){
-event_mouse = event.type;
-volume.addEventListener('mousemove', move);
-});
-volume.addEventListener('mouseup', function(event){
-event_mouse = event.type;
-volume.addEventListener('mousemove', move);
-});
-
-volume.addEventListener('touchmove', move);
 
 
 });

@@ -269,8 +269,18 @@ input[type=range]::-webkit-slider-runnable-track {
     transition: transform 300ms ease-in-out;
 }
 
+
 .audio-player-volume{
     height: 280px;
+    position: absolute!important;
+    top: 30px;
+}
+
+.audio-player-volume-container{
+    width: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #sliderBtn {
@@ -305,13 +315,11 @@ input[type=range]::-webkit-slider-runnable-track {
 .audio-player-nav{
     min-height: 120px;
 }
-.audio-player-tool{display: flex;
-align-items: center;
-width: 100%;
-justify-content: space-between;}
-.volume{
-    position: absolute;
-    width: 25%;
+.audio-player-tool{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
 }
 
 #barFull {
