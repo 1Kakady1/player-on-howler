@@ -17,7 +17,9 @@ document.addEventListener('DOMContentLoaded', function(){
 
       duration = document.querySelector('.audio-player-time__duration'),
       timer = document.querySelector('.audio-player-time__timer'),
-      progress_btn = document.querySelector('.audio-player__progress-btn');
+      progress_btn = document.querySelector('.audio-player__progress-btn'),
+      audio_tag = document.querySelector('#audio'),
+      logo = document.querySelector('.audio-player-vizual');
 
       window.sliderDown= true;
   console.log(window.sliderDown)
@@ -31,7 +33,18 @@ var Player = function(playlist) {
 };
 
 Player.prototype = {
+  getSound:function(){
+    var self = this;
+    var sound = self.playlist[self.index].howl;
 
+    audio_tag.src=sound._src;
+    analyser = context.createAnalyser();
+    src.connect(analyser);
+    analyser.connect(context.destination);
+
+    console.log(new Uint8Array(analyser.frequencyBinCount))
+    console.log(audio_tag);
+  },
   play: function(index) {
 
     var self = this;
@@ -48,8 +61,22 @@ Player.prototype = {
     } else {
       sound = data.howl = new Howl({
         src: ['./audio/' + data.file + '.mp3'],
-        html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
+       
         onplay: function() {
+          analyser = Howler.ctx.createAnalyser()
+          Howler.masterGain.connect(analyser)
+          analyser.connect(Howler.ctx.destination)
+          analyser.fftSize = 256;
+          bufferLength = analyser.frequencyBinCount
+          dataArray = new Uint8Array(bufferLength)
+          analyser.getByteTimeDomainData(dataArray);
+
+          // Display array on time each 3 sec (just to debug)
+          setInterval(function(){ 
+            analyser.getByteTimeDomainData(dataArray);
+            console.dir(dataArray);
+          }, 100);
+
           play_btn.style.display = 'none';
           pause_btn.style.display = 'block';
           // Display the duration.
@@ -81,6 +108,7 @@ Player.prototype = {
     }
 
     sound.play();
+   // self.getSound();
     self.index = index;
   },
 
@@ -92,8 +120,7 @@ Player.prototype = {
     var self = this;
     var sound = self.playlist[self.index].howl;
     sound.pause();
-    //console.log(Howler.ctx)
-
+    console.log("pause",Howler.ctx)
   },
   
   skip: function(direction) {
@@ -144,6 +171,12 @@ Player.prototype = {
     progress.style.width = (((seek / sound.duration()) * 100) || 0) + '%';
     progress_btn.style.left = (((seek / sound.duration()) * 100) || 0) + '%';
     // If the sound is still playing, continue stepping.
+    //array = new Uint8Array(analyser.frequencyBinCount);
+    
+    //console.log(analyser)
+    //logo.minHeight = (array[40])+"px";
+    //logo.width =  (array[40])+"px";
+
     if (sound.playing()) {
       requestAnimationFrame(self.step.bind(self));
     }
@@ -235,8 +268,10 @@ noUiSlider.create(stepSlider, {
     },
     orientation: 'vertical',
 });
+
 stepSlider.noUiSlider.on('update', function (values, handle) {
     stepSliderValueElement.innerHTML = Math.trunc(values[handle])+"%";
+    player.volume(Math.trunc(values[handle])/100);
 });
 
 
