@@ -30,21 +30,10 @@ document.addEventListener('DOMContentLoaded', function(){
 var Player = function(playlist) {
   this.playlist = playlist;
   this.index = 0;
-};
+},
+analyser;
 
 Player.prototype = {
-  getSound:function(){
-    var self = this;
-    var sound = self.playlist[self.index].howl;
-
-    audio_tag.src=sound._src;
-    analyser = context.createAnalyser();
-    src.connect(analyser);
-    analyser.connect(context.destination);
-
-    console.log(new Uint8Array(analyser.frequencyBinCount))
-    console.log(audio_tag);
-  },
   play: function(index) {
 
     var self = this;
@@ -60,25 +49,18 @@ Player.prototype = {
       sound = data.howl;
     } else {
       sound = data.howl = new Howl({
-        src: ['./audio/' + data.file + '.mp3'],
+        src: [data.file],
        
         onplay: function() {
+
+          
           analyser = Howler.ctx.createAnalyser()
           Howler.masterGain.connect(analyser)
-          analyser.connect(Howler.ctx.destination)
-          analyser.fftSize = 256;
-          bufferLength = analyser.frequencyBinCount
-          dataArray = new Uint8Array(bufferLength)
-          analyser.getByteTimeDomainData(dataArray);
-
-          // Display array on time each 3 sec (just to debug)
-          setInterval(function(){ 
-            analyser.getByteTimeDomainData(dataArray);
-            console.dir(dataArray);
-          }, 100);
+          analyser.fftSize = 512;
 
           play_btn.style.display = 'none';
           pause_btn.style.display = 'block';
+
           // Display the duration.
           duration.innerHTML = self.formatTime(Math.round(sound.duration()));
 
@@ -102,6 +84,7 @@ Player.prototype = {
           pause_btn.style.display = 'none';
         },
         onseek: function() {
+
           requestAnimationFrame(self.step.bind(self));
         }
       });
@@ -170,12 +153,13 @@ Player.prototype = {
     timer.innerHTML = self.formatTime(Math.round(seek));
     progress.style.width = (((seek / sound.duration()) * 100) || 0) + '%';
     progress_btn.style.left = (((seek / sound.duration()) * 100) || 0) + '%';
-    // If the sound is still playing, continue stepping.
-    //array = new Uint8Array(analyser.frequencyBinCount);
     
-    //console.log(analyser)
-    //logo.minHeight = (array[40])+"px";
-    //logo.width =  (array[40])+"px";
+    var array = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(array);
+
+   // analyser.getByteTimeDomainData(dataArray);
+    logo.style.minHeight = (array[10])+"px";
+    logo.style.width =  (array[10])+"px";
 
     if (sound.playing()) {
       requestAnimationFrame(self.step.bind(self));
@@ -209,7 +193,7 @@ Player.prototype = {
     var seconds = (secs - minutes * 60) || 0;
 
     return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-  }
+  },
   
 };
 
@@ -218,17 +202,17 @@ Player.prototype = {
 var player = new Player([
   {
     title: 'Rave Digger',
-    file: '1',
+    file: './audio/1.mp3',
     howl: null
   },
   {
     title: '80s Vibe',
-    file: '2',
+    file: './audio/2.mp3',
     howl: null
   },
   {
     title: 'Running Out',
-    file: '3',
+    file: 'https://zuvuk.net/files/muzic/WYR_GEMI_-_Black_Samurai.mp3',
     howl: null
   }
 ]);
