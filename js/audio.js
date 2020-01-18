@@ -1,7 +1,22 @@
 document.addEventListener('DOMContentLoaded', function(){
-  var circle = document.querySelector('.audio-vizual__circle circle')
-//  var stroke_dasharray = circle.getTotalLength();
- // var audio_list = [].slice.call(document.querySelectorAll('audio'));
+
+  var audio_list = [
+    {
+      title: 'Rave Digger',
+      file: './audio/1.mp3',
+      howl: null
+    },
+    {
+      title: '80s Vibe',
+      file: './audio/2.mp3',
+      howl: null
+    },
+    {
+      title: 'Running Out',
+      file: './audio/4.mp3',
+      howl: null
+    }
+  ]
 
   var play_btn = document.querySelector('.audio-player-nav__play'),
       pause_btn = document.querySelector('.audio-player-nav__pause'),
@@ -26,17 +41,62 @@ document.addEventListener('DOMContentLoaded', function(){
 
   //var audioCtx = new (window.AudioContext || window.webkitAudioContext)(); // define audio context. Webkit/blink browsers need prefix, Safari won't work without window.
 
+/* canvas */
+/*
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    var cwidth = canvas.width;
+    var cheight = canvas.height - 2;
+    var meterWidth = 5; //Width of squares
+    var gap = 2; //Spacing of squares
+    var capHeight = 2;
+    var meterNum = cwidth / (meterWidth + gap);
+    var gradient = ctx.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(1, '#0f00f0');
+    gradient.addColorStop(0.5, '#ff0ff0');
+    gradient.addColorStop(0, '#f00f00');
+    ctx.fillStyle = gradient;
+    */
+/* canvas END */
 
-var Player = function(playlist) {
+/* canvas */
+    var PI = Math.PI;
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    var cwidth = canvas.width;
+    var cheight = canvas.height;
+    var cr = 230;
+    var capHeight = 2;
+    var meterWidth = 5;
+    var meterNum = 180;
+    var gradient = ctx.createLinearGradient(0, -cr, 0, -cwidth/2);
+    gradient.addColorStop(1, '#0f00f0');
+    gradient.addColorStop(0.5, '#ff0ff0');
+    gradient.addColorStop(0, '#f00f00');
+    ctx.fillStyle = gradient;  
+
+/* canvas END */
+var Player = function(playlist,canvas_ctx,cwidth,cheight,meterWidth,gap=0,capHeight,meterNum,cr=0,pi=Math.PI) {
   this.playlist = playlist;
   this.index = 0;
+  this.cheight = cheight;
+  this.cwidth = cwidth;
+  this.gap = gap;
+  this.meterNum = meterNum;
+  this.canvas_ctx = canvas_ctx;
+  this.meterWidth = meterWidth;
+  this.capHeight = capHeight;
+  this.cr = cr;
+  this.PI = pi;
 },
 analyser;
 
+
+
 Player.prototype = {
   play: function(index) {
-
     var self = this;
+    console.log(self.canvas_ctx)
     console.log("index: ",this.index)
     var sound;
 
@@ -156,10 +216,39 @@ Player.prototype = {
     
     var array = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(array);
-
-   // analyser.getByteTimeDomainData(dataArray);
+    //console.log(array );
     logo.style.minHeight = (array[10])+"px";
     logo.style.width =  (array[10])+"px";
+
+    var step = Math.round(array.length / self.meterNum);
+    self.canvas_ctx.clearRect(0, 0, self.cwidth, self.cheight);
+    self.canvas_ctx.save();
+    self.canvas_ctx.translate(self.cwidth/2,self.cheight/2);
+    for (var i = 15; i < self.meterNum+15; i++) {
+        //ctx.save();
+        var value = array[i * step];
+        var meterHeight = value*(cheight/2 - self.cr)/256||self.capHeight;
+        self.canvas_ctx.rotate( 2*self.PI/self.meterNum );
+        self.canvas_ctx.fillRect( -self.meterWidth/2 , -self.cr- meterHeight , self.meterWidth, meterHeight);
+        //ctx.restore();
+    }
+    self.canvas_ctx.restore();
+
+
+
+/*
+    var step = Math.round(array.length / self.meterNum);
+    self.canvas_ctx.clearRect(0, 0, self.cwidth, self.cheight);
+    for (var i = 0; i < self.meterNum; i++) {
+        var value = array[i*step];
+       
+        self.canvas_ctx.fillRect(
+          i * (self.meterWidth+self.gap) , 
+          cheight - value + self.capHeight, 
+          self.meterWidth, 
+          self.cheight||self.capHeight
+        ); 
+    } */
 
     if (sound.playing()) {
       requestAnimationFrame(self.step.bind(self));
@@ -198,24 +287,7 @@ Player.prototype = {
 };
 
 
-
-var player = new Player([
-  {
-    title: 'Rave Digger',
-    file: './audio/1.mp3',
-    howl: null
-  },
-  {
-    title: '80s Vibe',
-    file: './audio/2.mp3',
-    howl: null
-  },
-  {
-    title: 'Running Out',
-    file: 'https://zuvuk.net/files/muzic/WYR_GEMI_-_Black_Samurai.mp3',
-    howl: null
-  }
-]);
+var player = new Player(audio_list,ctx,cwidth,cheight,meterWidth,0,capHeight,meterNum,cr);
 
   play_btn.addEventListener("click",function(){
     player.play();
