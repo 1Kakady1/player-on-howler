@@ -65,9 +65,9 @@ document.addEventListener('DOMContentLoaded', function(){
     var ctx = canvas.getContext('2d');
     var cwidth = canvas.width;
     var cheight = canvas.height;
-    var cr = 230;
+    var cr = 135;
     var capHeight = 2;
-    var meterWidth = 5;
+    var meterWidth = 4;
     var meterNum = 180;
     var gradient = ctx.createLinearGradient(0, -cr, 0, -cwidth/2);
     gradient.addColorStop(1, '#0f00f0');
@@ -138,6 +138,7 @@ Player.prototype = {
         onpause: function() {
           play_btn.style.display = 'block';
           pause_btn.style.display = 'none';
+          //requestAnimationFrame(self.step.bind(self));
         },
         onstop: function() {
           play_btn.style.display = 'block';
