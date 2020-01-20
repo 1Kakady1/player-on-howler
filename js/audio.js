@@ -15,6 +15,11 @@ document.addEventListener('DOMContentLoaded', function(){
       title: 'Running Out',
       file: './audio/4.mp3',
       howl: null
+    },
+    {
+      title: 'Running Out',
+      file: './audio/5.mp3',
+      howl: null
     }
   ]
 
@@ -24,17 +29,14 @@ document.addEventListener('DOMContentLoaded', function(){
       prev_btn = document.querySelector('.audio-player-nav__prev'),
       progress  = document.querySelector('.audio-player__progress'),
       play_to_position = document.querySelector('.audio-player__progress-full'),
-
-      barFull = document.querySelector('.volume-bar-full'),
-      barEmpty = document.querySelector('.volume-bar-empty'),
-      sliderBtn = document.querySelector('.volume-bar-slider'),
-      volume = document.querySelector('#volume'),
-
       duration = document.querySelector('.audio-player-time__duration'),
       timer = document.querySelector('.audio-player-time__timer'),
       progress_btn = document.querySelector('.audio-player__progress-btn'),
-      audio_tag = document.querySelector('#audio'),
-      logo = document.querySelector('.audio-player-vizual');
+      volumeBtn = document.querySelector('.vol-svg'),
+      volumeBtnPath = document.querySelectorAll('.vol-svg path'),
+      logo = document.querySelector('.audio-player-vizual'),
+      stepSlider = document.getElementById('audio-player-volume'),
+      stepSliderValueElement = document.getElementById('audio-player-volume__size');
 
       window.sliderDown= true;
   console.log(window.sliderDown)
@@ -70,9 +72,9 @@ document.addEventListener('DOMContentLoaded', function(){
     var meterWidth = 4;
     var meterNum = 180;
     var gradient = ctx.createLinearGradient(0, -cr, 0, -cwidth/2);
-    gradient.addColorStop(1, '#0f00f0');
-    gradient.addColorStop(0.5, '#ff0ff0');
-    gradient.addColorStop(0, '#f00f00');
+    gradient.addColorStop(1, '#007cf0');
+    gradient.addColorStop(0.5, '#0fff73');
+    gradient.addColorStop(0, '#00d0f0');
     ctx.fillStyle = gradient;  
 
 /* canvas END */
@@ -217,9 +219,9 @@ Player.prototype = {
     
     var array = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(array);
-    //console.log(array );
-    logo.style.minHeight = (array[10])+"px";
-    logo.style.width =  (array[10])+"px";
+
+    logo.style.height = (array[40])+"px";
+    logo.style.width =  (array[40])+"px";
 
     var step = Math.round(array.length / self.meterNum);
     self.canvas_ctx.clearRect(0, 0, self.cwidth, self.cheight);
@@ -227,7 +229,7 @@ Player.prototype = {
     self.canvas_ctx.translate(self.cwidth/2,self.cheight/2);
     for (var i = 15; i < self.meterNum+15; i++) {
         //ctx.save();
-        var value = array[i * step];
+        var value = array[i * 1];
         var meterHeight = value*(cheight/2 - self.cr)/256||self.capHeight;
         self.canvas_ctx.rotate( 2*self.PI/self.meterNum );
         self.canvas_ctx.fillRect( -self.meterWidth/2 , -self.cr- meterHeight , self.meterWidth, meterHeight);
@@ -303,22 +305,24 @@ var player = new Player(audio_list,ctx,cwidth,cheight,meterWidth,0,capHeight,met
     player.skip("prev");
   });
 
+  volumeBtn.addEventListener("click",function(){
+      console.log(!this.classList.contains('audio-player-volume_show'))
+      if(!stepSlider.classList.contains('audio-player-volume_show')){
+        stepSlider.classList.add("audio-player-volume_show");
+      } else {
+        stepSlider.classList.remove("audio-player-volume_show")
+      }
+  });
+
   play_to_position.addEventListener("click",function(event){
     var offswt_x = this.getBoundingClientRect().x;
     player.seek((event.clientX - offswt_x) /  this.offsetWidth);
   });
 
-
-  // volume.oninput = function() {
-  //   player.volume(this.value/100);
-  // }
-
-var stepSlider = document.getElementById('audio-player-volume');
-var stepSliderValueElement = document.getElementById('audio-player-volume__size');
-
 noUiSlider.create(stepSlider, {
     start: [100],
     step: 0.1,
+    connect: [true, false],
     range: {
         'min': [0],
         'max': [100]
@@ -327,8 +331,25 @@ noUiSlider.create(stepSlider, {
 });
 
 stepSlider.noUiSlider.on('update', function (values, handle) {
-    stepSliderValueElement.innerHTML = Math.trunc(values[handle])+"%";
-    player.volume(Math.trunc(values[handle])/100);
+    var vol = Math.trunc(values[handle]);
+    stepSliderValueElement.innerHTML = vol+"%";
+    player.volume(vol/100);
+
+    if(vol < 80){
+      volumeBtnPath[3].style.display = "none";
+    } else {
+      volumeBtnPath[3].style.display = "block";
+    }
+    if(vol < 40){
+      volumeBtnPath[2].style.display = "none";
+    } else {
+      volumeBtnPath[2].style.display = "block";
+    }
+    if(vol <= 0){
+      volumeBtnPath[1].style.display = "none";
+    } else {
+      volumeBtnPath[1].style.display = "block";
+    }
 });
 
 

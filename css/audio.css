@@ -26,7 +26,7 @@
 }
 .audio-player::before{
     content: "";
-    background-color: rgba(60, 241, 241, 0.2784313725490196);
+    background-color: rgba(17, 17, 17, 0.6);
     width: 100%;
     height: 100%;
     position: absolute;
@@ -131,8 +131,10 @@
 .audio-player-vizual{
     width: 264px;
     height: 227px;
-    max-width: 270;
-    max-height: 270;
+    min-width: 5px;
+    min-height: 5px;
+    max-width: 270px;
+    max-height: 270px;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -169,11 +171,21 @@
     transition: transform 300ms ease-in-out;
 }
 
-
 .audio-player-volume{
     height: 280px;
     position: absolute!important;
     top: 30px;
+    transform: translateX(45px);
+    opacity: 0;
+    visibility: hidden;
+    will-change: opacity, transform;
+    transition: opacity 300ms ease-in-out, transform 600ms ease-in-out, visibility 300ms linear;
+}
+.audio-player-volume_show{
+    transform: translateX(10px);
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 300ms ease-in-out, transform 600ms ease-in-out, visibility 300ms linear;
 }
 
 .audio-player-volume-container{
@@ -182,7 +194,21 @@
     align-items: center;
     justify-content: center;
 }
-
+.vol-svg{
+    width: 16px;
+    height: 16px;
+    fill: #fff;
+    position: absolute;
+    top: 32px;
+    right: 5.5%;
+    cursor: pointer;
+    transform: scale(1);
+    transition: transform 300ms ease-in-out;
+}
+.vol-svg:hover{
+    transform: scale(1.1);
+    transition: transform 300ms ease-in-out;
+}
 #sliderBtn {
     width: 20px;
     height: 20px;
@@ -224,4 +250,32 @@
 
 #barFull {
     width: 90%;
+}
+#audio-player-volume__size{
+    color: #fff;
+}
+/* range slider */
+.noUi-vertical {
+    width: 6px;
+}
+.noUi-vertical .noUi-handle {
+    width: 14px;
+    height: 14px;
+    right: -5px;
+    top: -12px;
+    border-radius: 100%;
+    outline: none;
+    cursor: pointer;
+}
+
+.noUi-vertical .noUi-handle:after, .noUi-vertical .noUi-handle:before {
+    display: none;
+}
+
+.noUi-target {
+    background: rgba(255, 255, 255, 0.45);
+ }
+
+.noUi-connect {
+    background: #fff;
 }
