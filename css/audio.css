@@ -24,6 +24,18 @@
     overflow: hidden;
     border-radius: 26px;
 }
+#index-video{
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
 .audio-player::before{
     content: "";
     background-color: rgba(17, 17, 17, 0.6);
@@ -32,6 +44,7 @@
     position: absolute;
     left: 0px;
     top: 0px;
+    z-index: 2;
     
 }
 .audio-player-container{

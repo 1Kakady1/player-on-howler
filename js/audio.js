@@ -23,6 +23,14 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   ]
 
+  var video_list = [
+    "./video/vi-1.mp4",
+    "./video/vi-2.mp4",
+    "./video/vi-3.mp4",
+    "./video/vi-4.mp4",
+    "./video/vi-5.mp4",
+  ];
+
   var play_btn = document.querySelector('.audio-player-nav__play'),
       pause_btn = document.querySelector('.audio-player-nav__pause'),
       next_btn = document.querySelector('.audio-player-nav__next'),
@@ -36,7 +44,8 @@ document.addEventListener('DOMContentLoaded', function(){
       volumeBtnPath = document.querySelectorAll('.vol-svg path'),
       logo = document.querySelector('.audio-player-vizual'),
       stepSlider = document.getElementById('audio-player-volume'),
-      stepSliderValueElement = document.getElementById('audio-player-volume__size');
+      stepSliderValueElement = document.getElementById('audio-player-volume__size'),
+      video = document.getElementById('index-video');
 
       window.sliderDown= true;
   console.log(window.sliderDown)
@@ -81,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function(){
 var Player = function(playlist,canvas_ctx,cwidth,cheight,meterWidth,gap=0,capHeight,meterNum,cr=0,pi=Math.PI) {
   this.playlist = playlist;
   this.index = 0;
+  this.indexVideo = 0;
   this.cheight = cheight;
   this.cwidth = cwidth;
   this.gap = gap;
@@ -94,19 +104,15 @@ var Player = function(playlist,canvas_ctx,cwidth,cheight,meterWidth,gap=0,capHei
 analyser;
 
 
-
 Player.prototype = {
   play: function(index) {
     var self = this;
-    console.log(self.canvas_ctx)
-    console.log("index: ",this.index)
     var sound;
 
     index = typeof index === 'number' ? index : self.index;
     var data = self.playlist[index];
-
-    // If we already loaded this track, use the current one.
-    // Otherwise, setup and load a new Howl.
+   
+   // self.step.bind(self)
     if (data.howl) {
       sound = data.howl;
     } else {
@@ -115,7 +121,6 @@ Player.prototype = {
        
         onplay: function() {
 
-          
           analyser = Howler.ctx.createAnalyser()
           Howler.masterGain.connect(analyser)
           analyser.fftSize = 512;
@@ -123,10 +128,8 @@ Player.prototype = {
           play_btn.style.display = 'none';
           pause_btn.style.display = 'block';
 
-          // Display the duration.
           duration.innerHTML = self.formatTime(Math.round(sound.duration()));
 
-          // Start upating the progress of the track.
           requestAnimationFrame(self.step.bind(self));
 
         },
@@ -140,14 +143,12 @@ Player.prototype = {
         onpause: function() {
           play_btn.style.display = 'block';
           pause_btn.style.display = 'none';
-          //requestAnimationFrame(self.step.bind(self));
         },
         onstop: function() {
           play_btn.style.display = 'block';
           pause_btn.style.display = 'none';
         },
         onseek: function() {
-
           requestAnimationFrame(self.step.bind(self));
         }
       });
@@ -158,11 +159,8 @@ Player.prototype = {
     self.index = index;
   },
 
-  /**
-   * Pause the currently playing track.
-   */
   pause: function() {
-
+    video.pause()
     var self = this;
     var sound = self.playlist[self.index].howl;
     sound.pause();
@@ -172,7 +170,7 @@ Player.prototype = {
   skip: function(direction) {
 
     var self = this;
-    console.group(self)
+    
     // Get the next track based on the direction of the track.
     var index = 0;
     if (direction === 'prev') {
@@ -186,28 +184,23 @@ Player.prototype = {
         index = 0;
       }
     }
-
+    self.video(self);
     self.skipTo(index);
   },
-
-
   skipTo: function(index) {
     var self = this;
 
     if (self.playlist[self.index].howl) {
       self.playlist[self.index].howl.stop();
     }
-
+    console.log(video_list);
+    
     // Reset progress.
     progress.style.width = '0%';
     progress_btn.style.left = '0%';
 
-
     self.play(index);
   },
-  /**
-   * The step called within requestAnimationFrame to update the playback position.
-   */
   step: function() {
     var self = this;
     var sound = self.playlist[self.index].howl;
@@ -286,6 +279,53 @@ Player.prototype = {
 
     return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
   },
+  video: function(self){
+    //console.log("index", self.index)
+    self.fadeOut(video,self.fadeIn)
+  },
+  fadeIn: function (self,el,display){
+    el.style.opacity = 0;
+    el.style.display = display || "block";
+    
+    let new_index = el.dataset.playIndex === undefined ? 0 : Math.floor( 0 + Math.random() * (4 + 1 - 0))
+    video.src = video_list[new_index];
+    el.dataset.playIndex = new_index
+    video.autoplay = true;
+    video.load();
+    
+    (function fade() {
+      var val = parseFloat(el.style.opacity);
+      if (!((val += .1) > 1)) {
+        el.style.opacity = val;
+        requestAnimationFrame(fade);
+      } 
+    })();
+  },
+  randomExc: function(exc){
+    //let rand = Math.ceil(Math.random(0,7));
+    let rand = 0 + Math.random() * (4 + 1 - 0);
+    if(rand === exc){
+      this.randomExc(exc)
+    }
+
+    return rand;
+  },
+  fadeOut:function(el,callback){
+    el.style.opacity = 1;
+    let self = this;
+    console.log("index", this.index);
+    (function fade() {
+      if ((el.style.opacity -= .1) < 0) {
+        el.style.display = "none";
+        //console.log("fadeOut")
+        if(callback !==  undefined){
+          callback(self,el)
+        }
+      } else {
+        requestAnimationFrame(fade);
+      }
+    })();
+  }
   
 };
 

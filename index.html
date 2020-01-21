@@ -15,12 +15,14 @@
     <div class="container">
         <div class="audio-player" style="background-image: url(./img/prew-4.jpg);">
 
-            <!-- <div class="audio-vializ" style="transform: scale(0.7);">
-                <svg class="audio-vizual__circle"  version="1.1"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="60" cy="60" r="50" fill="none" stroke="black" stroke-width="3" stroke-dasharray="313"; stroke-dashoffset= "313"; />
-                </svg>
-            </div> -->
+            <video id="index-video" 
+                muted="true" loop="true" 
+                preload="metadata" 
+                playsinline="true" 
+                style="display:block"
+                webkit-playsinline="true">
+                <!-- <source src="./video/vi-3.mp4" type="video/mp4"> -->
+            </video>
             <div class="audio-player-container">
                 <canvas id='canvas' width="400" height="400"></canvas>
                 <div class="audio-player-vizual">
