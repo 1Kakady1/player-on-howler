@@ -17,6 +17,7 @@
 .audio-player{
     width: 100%;
     min-height: 100%;
+    max-width: 996px;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -65,7 +66,11 @@
     width: 100%;
     left: 0px;
     padding: 10px 123px;
-    bottom: 116px;
+    bottom: 86px;
+    max-width: 750px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 .audio-player-nav-progress{
     position: relative;
@@ -167,7 +172,7 @@
     cursor: pointer;
     width: 31px;
     height: 31px;
-    position: absolute;
+    /* position: absolute; */
     background-color: transparent;
     transform: scale(1);
     transition: transform 300ms ease-in-out;
@@ -175,6 +180,7 @@
 .audio-player-nav__btn svg{
     width: 100%;
     height: 100%;
+    fill: #fff;
 }
 .audio-player-nav__pause{
     display: none;
@@ -266,6 +272,68 @@
 }
 #audio-player-volume__size{
     color: #fff;
+}
+/* modal video */
+
+.modal-video-list{
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    bottom: 166px;
+    padding: 16px;
+    right: 1px;
+    background-color: #000000bf;
+    border-radius: 11px;
+    z-index: 20;
+    transform: translateX(200%);
+    will-change: transform;
+    transition:  transform 300ms ease-in-out;
+}
+.modal-video-list__item{
+    width: 120px;
+    height: 46px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border-radius: 0px;
+    justify-content: center;
+    background-color: transparent;
+    transition: all 800ms ease-in-out;
+    
+}
+.modal-video-list.modal-video-list_show{
+    transition:  transform 500ms ease-in-out;
+    transform: translateX(0%);
+}
+.modal-video-list__item:hover{
+    border-radius: 3px;
+    transition: all 300ms ease-in-out;
+    background-color: #3bb8aa;
+}
+.modal-video-list__item.modal-video-list__item_active{
+    border-radius: 3px;
+    transition: all 300ms ease-in-out;
+    background-color: #3bb8aa;
+}
+.modal-video-list__item.modal-video-list__item_active .modal-video-list__item-preview{
+    will-change: transform;
+    transform: scale(0.8);
+    transition: transform 300ms ease-in-out;
+}
+.modal-video-list__item:hover .modal-video-list__item-preview{
+    /* width: 94%;
+    height: 94%; */
+    will-change: transform;
+    transform: scale(0.8);
+    transition: transform 300ms ease-in-out;
+}
+.modal-video-list__item-preview{
+    will-change: transform; 
+    fill: #fff;
+    width: 100%;
+    height: 100%;
+    transform: scale(1);
+    transition: transform 300ms ease-in-out;
 }
 /* range slider */
 .noUi-vertical {
