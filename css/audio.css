@@ -360,3 +360,85 @@
 .noUi-connect {
     background: #fff;
 }
+
+/*  */
+.audio-player-title{
+    color: #fff;
+    width: 230px;
+    overflow: hidden;
+    position: relative;
+    height: 18px;
+}
+.audio-player-title span{
+    position: absolute;
+    left: 0px;
+    display: block;
+    white-space: nowrap;
+    font-family: monospace;
+}
+
+/* toogle-list */
+.audio-player-toggel-list{
+    position: absolute;
+    left: 0px;
+    width: 50%;
+    top: 0;
+    height: 100%;
+    z-index: 999;
+    background: rgba(0, 0, 0, 0.5);
+    overflow-x: auto;
+    padding-top: 32px;
+    visibility: hidden;
+    transform: translate(-100%);
+    transition: transform .45s, visibility .45s;
+}
+.hider{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    z-index: 800;
+    display: none;
+}
+.audio-player-toggel-list.active_audio-player-list{
+    transform: translate(0%);
+    visibility: visible;
+    transition: transform .45s, visibility .45s;
+}
+
+.audio-player-toggel-list__item{
+    padding: 10px;
+    color: #fff;
+    font-family: monospace;
+    display: flex;
+    align-items: flex-start;
+    background-color: transparent;
+    transition: all 300ms ease-in;
+    cursor: pointer;
+}
+
+.audio-player-toggel-list__item:hover{
+    background-color: #3bb8aa;
+    transition: all 300ms ease-in;
+}
+
+
+.audio-title{
+    display: block;
+    width: 94%;
+}
+.audio-player-toggel-list__item svg{
+    margin-left: 6px;
+    width: 12px;
+    height: 12px;
+}
+.audio-player-tool__toggel-btn{
+    width: 34px;
+    height: 27px;
+    fill: #fff;
+    cursor: pointer;
+    position: relative;
+    z-index: 1000;
+}

@@ -1,5 +1,22 @@
 document.addEventListener('DOMContentLoaded', function(){
 
+  const svg_play = `<svg xmlns="http://www.w3.org/2000/svg" width="55" height="80" viewBox="0 0 55 80" fill="#FFF">
+  <g transform="matrix(1 0 0 -1 0 80)">
+      <rect width="10" height="27.7729" rx="3">
+          <animate attributeName="height" begin="0s" dur="4.3s" values="20;45;57;80;64;32;66;45;64;23;66;13;64;56;34;34;2;23;76;79;20" calcMode="linear" repeatCount="indefinite"/>
+      </rect>
+      <rect x="15" width="10" height="51.7361" rx="3">
+          <animate attributeName="height" begin="0s" dur="2s" values="80;55;33;5;75;23;73;33;12;14;60;80" calcMode="linear" repeatCount="indefinite"/>
+      </rect>
+      <rect x="30" width="10" height="72.684" rx="3">
+          <animate attributeName="height" begin="0s" dur="1.4s" values="50;34;78;23;56;23;34;76;80;54;21;50" calcMode="linear" repeatCount="indefinite"/>
+      </rect>
+      <rect x="45" width="10" height="63.9762" rx="3">
+          <animate attributeName="height" begin="0s" dur="2s" values="30;45;13;80;56;72;45;76;34;23;67;30" calcMode="linear" repeatCount="indefinite"/>
+      </rect>
+  </g>
+</svg>`;
+
   var audio_list = [
     {
       title: 'Rave Digger',
@@ -48,10 +65,16 @@ document.addEventListener('DOMContentLoaded', function(){
       video = document.getElementById('index-video'),
       video_play = document.querySelector('.video-play'),
       modal_video_list = document.querySelector('.modal-video-list'),
-      modal_video_list_items = document.querySelectorAll('.modal-video-list__item');
+      modal_video_list_items = document.querySelectorAll('.modal-video-list__item'),
+      sound_title = document.querySelector('.audio-player-title span'),
+      btn_toggle_list = document.querySelector('.audio-player-tool__toggel-btn'),
+      toggle_list = document.querySelector('.audio-player-toggel-list'),
+      toggle_list_items = document.querySelectorAll('.audio-player-toggel-list__item'),
+      hider_toggle = document.querySelector('.hider'),
+      flag_sl="left",
+      sl_pause = ["pause",0];
+      window.sl= 0;
 
-      window.sliderDown= true;
-  console.log(window.sliderDown)
 
   //var audioCtx = new (window.AudioContext || window.webkitAudioContext)(); // define audio context. Webkit/blink browsers need prefix, Safari won't work without window.
 
@@ -173,6 +196,7 @@ Player.prototype = {
 
     sound.play();
    // self.getSound();
+   
     self.index = index;
   },
 
@@ -218,6 +242,9 @@ Player.prototype = {
   step: function() {
     var self = this;
     var sound = self.playlist[self.index].howl;
+
+    self.title();
+
     // Determine our current seek position.
     var seek = sound.seek() || 0;
     timer.innerHTML = self.formatTime(Math.round(seek));
@@ -279,13 +306,7 @@ Player.prototype = {
   volume: function(val) {
     var self = this;
 
-    // Update the global volume (affecting all Howls).
     Howler.volume(val);
-
-    // Update the display on the slider.
-    //var barWidth = (val * 90) / 100;
-    //barFull.style.width = (barWidth * 100) + '%';
-   // sliderBtn.style.right = (window.innerWidth * barWidth + window.innerWidth * 0.05 - 25) + 'px';
   },
   formatTime: function(secs) {
     var minutes = Math.floor(secs / 60) || 0;
@@ -320,6 +341,42 @@ Player.prototype = {
         requestAnimationFrame(fade);
       }
     })();
+  },
+  title: function(){
+    var self = this;
+    var title_len = sound_title.getBoundingClientRect().width
+    var flag_buf = flag_sl;
+    if(title_len > 230){
+
+        if(window.sl > (-title_len)+220 && flag_sl == "left"){
+          window.sl-=0.5;
+          sound_title.style.transform = `translateX(${window.sl}px)`;
+        } else if( flag_sl === "left"){
+          flag_sl = "right";
+          sl_pause[0] = "right";
+        }
+  
+        if(window.sl < 0 && flag_sl == "right"){
+          window.sl+=0.5;
+          sound_title.style.transform = `translateX(${window.sl}px)`;
+        } else if(flag_sl === "right"){
+          flag_sl = "left";
+          sl_pause[0] = "left";
+        }
+
+        if(flag_sl !== flag_buf){
+          sl_pause[1]+=0.5;
+          flag_sl = "pause";
+        } else if(flag_sl === "pause"){
+          sl_pause[1]+=0.5;
+          if(sl_pause[1] === 20){
+            sl_pause[1]=0;
+            flag_sl = sl_pause[0];
+          }
+        }
+
+      }
+
   }
   
 };
@@ -364,6 +421,40 @@ var player = new Player(audio_list,ctx,cwidth,cheight,meterWidth,0,capHeight,met
     //player.video();
   });
 
+hider_toggle.addEventListener("click",function(event){
+  var _this = this;
+  requestAnimationFrame(function(){
+    btn_toggle_list.classList.remove("tog-active");
+    toggle_list.classList.remove("active_audio-player-list");
+    _this.style.display="none";
+  })
+
+});
+
+btn_toggle_list.addEventListener("click",function(event){
+  var _this = this;
+  //active_audio-player-list
+  if(!modal_video_list.classList.contains('modal-video-list_show')){
+    requestAnimationFrame(function(){
+      _this.classList.add("tog-active");
+      toggle_list.classList.add("active_audio-player-list");
+      hider_toggle.style.display="block";
+    })
+  }else {
+    requestAnimationFrame(function(){
+      _this.classList.remove("tog-active");
+      hider_toggle.style.display="none";
+      toggle_list.classList.remove("active_audio-player-list");
+    })
+  }
+
+});
+
+toggle_list_items.forEach(function callback(item, index) {
+  item.addEventListener("click",function(e){
+
+  });
+});
   modal_video_list_items.forEach(function callback(item, index) {
     item.addEventListener("click",function(e){
       let url = item.dataset.videoSrc;
@@ -396,6 +487,7 @@ noUiSlider.create(stepSlider, {
     },
     orientation: 'vertical',
 });
+
 
 stepSlider.noUiSlider.on('update', function (values, handle) {
     var vol = Math.trunc(values[handle]);
