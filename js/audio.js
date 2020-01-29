@@ -17,36 +17,30 @@ document.addEventListener('DOMContentLoaded', function(){
   </g>
 </svg>`;
 
-  var audio_list = [
-    {
-      title: 'Rave Digger',
-      file: './audio/1.mp3',
-      howl: null
-    },
-    {
-      title: '80s Vibe',
-      file: './audio/2.mp3',
-      howl: null
-    },
-    {
-      title: 'Running Out',
-      file: './audio/4.mp3',
-      howl: null
-    },
-    {
-      title: 'Running Out',
-      file: './audio/5.mp3',
-      howl: null
-    }
-  ]
-
-  // var video_list = [
-  //   "./video/vi-1.mp4",
-  //   "./video/vi-2.mp4",
-  //   "./video/vi-3.mp4",
-  //   "./video/vi-4.mp4",
-  //   "./video/vi-5.mp4",
-  // ];
+  // var audio_list = [
+  //   {
+  //     title: 'Rave Digger',
+  //     file: './audio/1.mp3',
+  //     howl: null
+  //   },
+  //   {
+  //     title: '80s Vibe',
+  //     file: './audio/2.mp3',
+  //     howl: null
+  //   },
+  //   {
+  //     title: 'Running Out',
+  //     file: './audio/4.mp3',
+  //     howl: null
+  //   },
+  //   {
+  //     title: 'Running Out',
+  //     file: './audio/5.mp3',
+  //     howl: null
+  //   }
+  // ]
+  var audio_list = []; // {title: '',file: '',howl: null}
+  var cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
 
   var play_btn = document.querySelector('.audio-player-nav__play'),
       pause_btn = document.querySelector('.audio-player-nav__pause'),
@@ -137,11 +131,23 @@ Player.prototype = {
 
     index = typeof index === 'number' ? index : self.index;
     var data = self.playlist[index];
-   
+
    // self.step.bind(self)
     if (data.howl) {
+
       sound = data.howl;
+
+      self.fadeOut(sound_title,function(){
+        flag_sl="left",
+        sl_pause = ["pause",0];
+        window.sl = 0;
+        sound_title.style.transform = `translateX(0px)`;
+        sound_title.textContent = data.title;
+        self.fadeIn(sound_title);
+      })
+
     } else {
+      
       sound = data.howl = new Howl({
         src: [data.file],
        
@@ -160,12 +166,12 @@ Player.prototype = {
 
           duration.innerHTML = self.formatTime(Math.round(sound.duration()));
 
-          requestAnimationFrame(self.step.bind(self));
+          window.anim = requestAnimationFrame(self.step.bind(self));
 
         },
 
         onload: function() {
-
+          
         },
         onend: function() {
           self.skip('next');
@@ -182,21 +188,43 @@ Player.prototype = {
         onstop: function() {
           play_btn.style.display = 'block';
           pause_btn.style.display = 'none';
-
+         
           if(video.src !== null && video.src !== ""){
             video.pause()
           }
 
         },
         onseek: function() {
-          requestAnimationFrame(self.step.bind(self));
+          cancelAnimationFrame(window.anim)
+          window.anim = requestAnimationFrame(self.step.bind(self));
         }
       });
+
+      self.fadeOut(sound_title,function(){
+        flag_sl="left",
+        sl_pause = ["pause",0];
+        window.sl = 0;
+        sound_title.style.transform = `translateX(0px)`;
+        sound_title.textContent = data.title;
+        self.fadeIn(sound_title);
+      })
+      
+    }//toggle_list_items[self.index].insertAdjacentHTML('beforeend', svg_play);
+    console.log(toggle_list_items[self.index])
+    
+    if(toggle_list_items[self.index].lastChild !== undefined && toggle_list_items[self.index].lastChild.tagName == "svg") {
+      self.fadeOut(toggle_list_items[self.index].lastChild,function () {
+        console.log(toggle_list_items)
+        toggle_list_items[self.index].lastChild.remove(); 
+        toggle_list_items[index].insertAdjacentHTML('beforeend', svg_play);
+        self.fadeIn(toggle_list_items[index].lastChild)
+      })
+    } else{
+      toggle_list_items[index].insertAdjacentHTML('beforeend', svg_play);
+      self.fadeIn(toggle_list_items[index].lastChild)
     }
 
     sound.play();
-   // self.getSound();
-   
     self.index = index;
   },
 
@@ -204,15 +232,16 @@ Player.prototype = {
     var self = this;
     var sound = self.playlist[self.index].howl;
     sound.pause();
-    console.log("pause",Howler.ctx)
+    console.log("pause",sound)
   },
   
   skip: function(direction) {
-
+    cancelAnimationFrame(window.anim)
     var self = this;
     
     // Get the next track based on the direction of the track.
     var index = 0;
+
     if (direction === 'prev') {
       index = self.index - 1;
       if (index < 0) {
@@ -224,11 +253,12 @@ Player.prototype = {
         index = 0;
       }
     }
+
     self.skipTo(index);
   },
   skipTo: function(index) {
     var self = this;
-
+    cancelAnimationFrame(window.anim)
     if (self.playlist[self.index].howl) {
       self.playlist[self.index].howl.stop();
     }
@@ -243,9 +273,8 @@ Player.prototype = {
     var self = this;
     var sound = self.playlist[self.index].howl;
 
-    self.title();
+    self.title.bind(self)()
 
-    // Determine our current seek position.
     var seek = sound.seek() || 0;
     timer.innerHTML = self.formatTime(Math.round(seek));
     progress.style.width = (((seek / sound.duration()) * 100) || 0) + '%';
@@ -271,33 +300,17 @@ Player.prototype = {
     }
     self.canvas_ctx.restore();
 
-
-
-/*
-    var step = Math.round(array.length / self.meterNum);
-    self.canvas_ctx.clearRect(0, 0, self.cwidth, self.cheight);
-    for (var i = 0; i < self.meterNum; i++) {
-        var value = array[i*step];
-       
-        self.canvas_ctx.fillRect(
-          i * (self.meterWidth+self.gap) , 
-          cheight - value + self.capHeight, 
-          self.meterWidth, 
-          self.cheight||self.capHeight
-        ); 
-    } */
-
     if (sound.playing()) {
-      requestAnimationFrame(self.step.bind(self));
+      window.anim = requestAnimationFrame(self.step.bind(self));
+    } else {
+      cancelAnimationFrame(window.anim)
     }
   },
   seek: function(per) {
     var self = this;
 
-    // Get the Howl we want to manipulate.
-    var sound = self.playlist[self.index].howl;
 
-    // Convert the percent into a seek position.
+    var sound = self.playlist[self.index].howl;
 
     if (sound.playing()) {
       sound.seek(sound.duration() * per);
@@ -331,21 +344,24 @@ Player.prototype = {
     let self = this;
 
     (function fade() {
+
       if ((el.style.opacity -= .1) < 0) {
         el.style.display = "none";
-        //console.log("fadeOut")
+        
         if(callback !==  undefined){
-          callback(el)
+          callback()
         }
       } else {
         requestAnimationFrame(fade);
       }
+      
     })();
   },
   title: function(){
     var self = this;
     var title_len = sound_title.getBoundingClientRect().width
     var flag_buf = flag_sl;
+   
     if(title_len > 230){
 
         if(window.sl > (-title_len)+220 && flag_sl == "left"){
@@ -377,12 +393,37 @@ Player.prototype = {
 
       }
 
+  },
+  nowSoundInfo: function(){
+    var self = this;
+    return {
+      index: self.index,
+      data: self.playlist[self.index]
+    }
   }
+
   
 };
 
+audio_list = getAudio("*[data-audio-src]");
+
+function getAudio(data_src){
+  var el = document.querySelectorAll(data_src);
+  var audio = Object.values(el).map(function callback(item, index) { 
+     return {
+        title: item.children[0].textContent,
+        file: item.dataset.audioSrc,
+        howl: null
+      }
+  });
+
+  return audio
+
+}
+
 
 var player = new Player(audio_list,ctx,cwidth,cheight,meterWidth,0,capHeight,meterNum,cr);
+
 
   play_btn.addEventListener("click",function(){
     player.play();
@@ -452,9 +493,18 @@ btn_toggle_list.addEventListener("click",function(event){
 
 toggle_list_items.forEach(function callback(item, index) {
   item.addEventListener("click",function(e){
-
+      var indexData = item.dataset.index;
+      //var indexPlay = player.nowSoundInfo().index;
+      player.skipTo(parseInt(indexData));
   });
 });
+
+// function removeClass(selecter){
+//   var list = document.querySelectorAll(selecter);
+//   forEach(function callback(item, index) {
+    
+//   })
+// }
   modal_video_list_items.forEach(function callback(item, index) {
     item.addEventListener("click",function(e){
       let url = item.dataset.videoSrc;
