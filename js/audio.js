@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function(){
       flag_sl="left",
       sl_pause = ["pause",0];
       window.sl= 0;
+      window.loading =  document.querySelector('.audio-player__loading');
 
 
   //var audioCtx = new (window.AudioContext || window.webkitAudioContext)(); // define audio context. Webkit/blink browsers need prefix, Safari won't work without window.
@@ -146,11 +147,22 @@ Player.prototype = {
         self.fadeIn(sound_title);
       })
 
-    } else {
+    } else { 
+      let srcAudio = [] 
       
-      sound = data.howl = new Howl({
-        src: [data.file],
-       
+      if(data.fileWebm !== null){
+        srcAudio.push(data.fileWebm)
+      }
+    
+      srcAudio.push(data.file)
+
+      //  https://developers.google.com/web/fundamentals/media/mse/seamless-playback
+        sound = data.howl = new Howl({
+        //src: [data.file],
+        src: srcAudio,
+        //html5: true,
+       // preload: true,
+        buffer: true,
         onplay: function() {
 
           if(video.src !== null && video.src !== ""){
@@ -160,19 +172,19 @@ Player.prototype = {
           analyser = Howler.ctx.createAnalyser()
           Howler.masterGain.connect(analyser)
           analyser.fftSize = 512;
-          
+
           play_btn.style.display = 'none';
           pause_btn.style.display = 'block';
 
           duration.innerHTML = self.formatTime(Math.round(sound.duration()));
 
           window.anim = requestAnimationFrame(self.step.bind(self));
-
+          window.loading.style.opacity="0";
         },
 
-        onload: function() {
-          
-        },
+        // onload: function() {
+         
+        // },
         onend: function() {
           self.skip('next');
         },
@@ -223,9 +235,12 @@ Player.prototype = {
       toggle_list_items[index].insertAdjacentHTML('beforeend', svg_play);
       self.fadeIn(toggle_list_items[index].lastChild)
     }
-
-    sound.play();
+    
     self.index = index;
+    //sound.load();
+    window.loading.style.opacity="1";
+    sound.play();
+
   },
 
   pause: function() {
@@ -270,6 +285,9 @@ Player.prototype = {
     self.play(index);
   },
   step: function() {
+
+    //console.log("step");
+
     var self = this;
     var sound = self.playlist[self.index].howl;
 
@@ -282,10 +300,10 @@ Player.prototype = {
     
     var array = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(array);
-
+   // console.log(array)
     logo.style.height = (array[40])+"px";
     logo.style.width =  (array[40])+"px";
-
+    array=[...array.slice(0, 127),...array.slice(0, 127).reverse()];
     var step = Math.round(array.length / self.meterNum);
     self.canvas_ctx.clearRect(0, 0, self.cwidth, self.cheight);
     self.canvas_ctx.save();
@@ -412,7 +430,9 @@ function getAudio(data_src){
   var audio = Object.values(el).map(function callback(item, index) { 
      return {
         title: item.children[0].textContent,
-        file: item.dataset.audioSrc,
+        file: item.dataset.audioSrc+'.mp3',
+        //file: item.dataset.audioSrc,
+        fileWebm: item.dataset.audioWebp==="on"? item.dataset.audioSrc+'.webm':null,
         howl: null
       }
   });
@@ -421,12 +441,13 @@ function getAudio(data_src){
 
 }
 
-
 var player = new Player(audio_list,ctx,cwidth,cheight,meterWidth,0,capHeight,meterNum,cr);
 
 
   play_btn.addEventListener("click",function(){
-    player.play();
+    //.oncanplay = function() {   
+      player.play();                          
+   // }
   });   
   pause_btn.addEventListener("click",function(){
     player.pause();
@@ -561,5 +582,21 @@ stepSlider.noUiSlider.on('update', function (values, handle) {
     }
 });
 
+Hammer(document.querySelector(".audio-player-toggel-list-hammer")).on("swiperight", function() {
+    requestAnimationFrame(function(){
+      btn_toggle_list.classList.add("tog-active");
+      toggle_list.classList.add("active_audio-player-list");
+      hider_toggle.style.display="block";
+    })
+});
+
+Hammer(toggle_list).on("swipeleft", function() {
+    requestAnimationFrame(function(){
+      btn_toggle_list.classList.remove("tog-active");
+      hider_toggle.style.display="none";
+      toggle_list.classList.remove("active_audio-player-list");
+    })
+
+});
 
 });

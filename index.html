@@ -61,6 +61,24 @@
                             <!-- <marquee behavior="scroll" direction="left">Title - tetle title tetle title tetle title</marquee> -->
                             <span></span>
                         </div>
+                        <div class="audio-player__loading" style="opacity: 0;">
+                            <span>
+                                Loading 
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44" stroke="#fff">
+                                    <g fill="none" fill-rule="evenodd" stroke-width="2">
+                                        <circle cx="22" cy="22" r="7.00588">
+                                            <animate attributeName="r" begin="0s" dur="1.8s" values="1; 20" calcMode="spline" keyTimes="0; 1" keySplines="0.165, 0.84, 0.44, 1" repeatCount="indefinite"/>
+                                            <animate attributeName="stroke-opacity" begin="0s" dur="1.8s" values="1; 0" calcMode="spline" keyTimes="0; 1" keySplines="0.3, 0.61, 0.355, 1" repeatCount="indefinite"/>
+                                        </circle>
+                                        <circle cx="22" cy="22" r="18.9689">
+                                            <animate attributeName="r" begin="-0.9s" dur="1.8s" values="1; 20" calcMode="spline" keyTimes="0; 1" keySplines="0.165, 0.84, 0.44, 1" repeatCount="indefinite"/>
+                                            <animate attributeName="stroke-opacity" begin="-0.9s" dur="1.8s" values="1; 0" calcMode="spline" keyTimes="0; 1" keySplines="0.3, 0.61, 0.355, 1" repeatCount="indefinite"/>
+                                        </circle>
+                                    </g>
+                                </svg>
+                            </span>
+                        </div>
+  
                         <div class="audio-player-volume-container">
                             <div id="audio-player-volume__size">100%</div>
                             <svg version="1.1" class="vol-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -137,19 +155,20 @@
  
             </div>
             <div class="audio-player-toggel-list">
-                <div class="audio-player-toggel-list__item" data-index="0" data-audio-src="./audio/1.mp3">
+                <div class="audio-player-toggel-list__item" data-index="0" data-audio-webp="off" data-audio-src="./audio/1">
                     <span class="audio-title"> Rompasso - Gaillardia</span>
                 </div>
-                <div class="audio-player-toggel-list__item" data-index="1" data-audio-src="./audio/2.mp3">
+                <div class="audio-player-toggel-list__item" data-index="1" data-audio-webp="off" data-audio-src="./audio/2">
                     <span class="audio-title">Can039t Get You out of My Head (Cover) - AnnenMayKantereit x Parcels</span>
                 </div>
-                <div class="audio-player-toggel-list__item" data-index="2" data-audio-src="./audio/3.mp3">
+                <div class="audio-player-toggel-list__item" data-index="2" data-audio-webp="off" data-audio-src="./audio/3">
                     <span class="audio-title">BOB SINCLAR - WORLD HOLD ON (CLUB MIX) </span>
                 </div>
-                <div class="audio-player-toggel-list__item" data-index="3" data-audio-src="./audio/4.mp3">
+                <div class="audio-player-toggel-list__item" data-index="3" data-audio-webp="off" data-audio-src="./audio/4">
                     <span class="audio-title">EMMX - Say Nothing</span>
                 </div>
             </div>
+            <div class="audio-player-toggel-list-hammer"></div>
             <div class="modal-video-list">
                 <div class="modal-video-list__item" data-video-src="./video/vi-4.mp4">
                     <img class="modal-video-list__item-preview" src="./img/vi-4-p.png" alt="">
@@ -171,7 +190,7 @@
     </div>
    
    
-
+<script src="./js/hammer.js"></script>
 <script src="./js/howler.min.js"></script>
 <script src="./js/nouislider.min.js"></script>
 <script src="./js/audio.js" crossorigin="anonymous"></script>
