@@ -165,6 +165,9 @@
 }
 .audio-player-btn-group{
     position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
 }
 .audio-player-nav__btn{
     outline: none;
@@ -408,13 +411,19 @@
     font-family: monospace;
     color: white;
     transform: translateX(-50%);
+    transition: opacity 900ms ease-in-out;
+
 }
-.audio-player__loading span{
+.video__loading{
+    font-family: monospace;
+    transition: opacity 900ms ease-in-out;
+    color: white;
+}
+.audio-player__loading span,.video__loading span{
     display: flex;
     align-items: center;
-    transition: opacity 400ms ease-in-out;
 }
-.audio-player__loading svg{
+.audio-player__loading svg,.video__loading svg{
     margin-left: 8px;
     width: 20px;
     height: 20px;

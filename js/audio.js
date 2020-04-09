@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function(){
       toggle_list = document.querySelector('.audio-player-toggel-list'),
       toggle_list_items = document.querySelectorAll('.audio-player-toggel-list__item'),
       hider_toggle = document.querySelector('.hider'),
+      video_loading = document.querySelector('.video__loading'),
       flag_sl="left",
       sl_pause = ["pause",0];
       window.sl= 0;
@@ -534,9 +535,20 @@ toggle_list_items.forEach(function callback(item, index) {
 
         video.src = url;
         video.autoplay = true;
+        video_loading.style.opacity="1";
         video.load();
 
-        player.fadeIn(video);
+        if(url != "" && url != null && url != 'null'){
+          video.oncanplaythrough = function(event) {
+                 player.fadeIn(video);
+                 video_loading.style.opacity="0";
+           };
+        } else{
+          player.fadeIn(video);
+          video_loading.style.opacity="0";
+        }
+
+       
       });
 
       //modal_video_list_items.classList.remove("modal-video-list__item_active");
