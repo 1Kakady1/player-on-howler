@@ -51,21 +51,21 @@
 .audio-player-container{
     position: relative;
     z-index: 10;
-    padding: 10px 40px;
+    padding: 10px 10px;
     min-height: 600px;
 }
 .audio-player-nav-bottom{
     position: absolute;
-    width: calc(100% - 80px);
+    width: calc(100% - 20px);
     left: 0px;
-    padding: 10px 40px;
+    padding: 10px 10px;
     bottom: 40px;
 }
 .audio-player-nav-top{
     position: absolute;
-    width: 100%;
+    width: calc(100% - 104px);
     left: 0px;
-    padding: 10px 123px;
+    padding: 10px 52px;
     bottom: 86px;
     max-width: 750px;
     display: flex;
@@ -75,8 +75,8 @@
 .audio-player-nav-progress{
     position: relative;
     padding-bottom: 11px;
-    margin-left: 60px;
-    margin-right: 60px;
+    margin-left: 16px;
+    margin-right: 16px;
     width: 100%;
 }
 .audio-player-time{
@@ -180,6 +180,10 @@
     transform: scale(1);
     transition: transform 300ms ease-in-out;
 }
+
+/* .audio-player-nav__btn.video-play{
+    display: none;
+} */
 .audio-player-nav__btn svg{
     width: 100%;
     height: 100%;
@@ -287,8 +291,9 @@
     right: 1px;
     background-color: #000000bf;
     border-radius: 11px;
-    z-index: 20;
+    z-index: 991;
     transform: translateX(200%);
+    width: calc(100% - 32px);
     will-change: transform;
     transition:  transform 300ms ease-in-out;
 }
@@ -375,6 +380,7 @@
 .audio-player-title span{
     position: absolute;
     left: 0px;
+    transition: left 300ms ease;
     display: block;
     white-space: nowrap;
     font-family: monospace;
@@ -384,7 +390,7 @@
 .audio-player-toggel-list{
     position: absolute;
     left: 0px;
-    width: 50%;
+    width: 86%;
     top: 0;
     height: 100%;
     z-index: 999;
@@ -478,4 +484,52 @@
     cursor: pointer;
     position: relative;
     z-index: 1000;
+}
+
+@media screen and (min-width:  600px){
+    .audio-player-container{
+        padding: 10px 40px;
+    }
+    .audio-player-nav-bottom{
+        padding: 10px 40px;
+        width: calc(100% - 80px);
+    }
+    .audio-player-nav-top{
+        position: absolute;
+        width: calc(100% - 176px);
+        padding: 10px 88px;
+    }
+}
+@media screen and (min-width:  768px){
+    .audio-player-toggel-list{
+        width: 70%;
+    }
+    .audio-player-nav-progress{
+        margin-left: 60px;
+        margin-right: 60px;
+    }
+    .audio-player-nav-top{
+        position: absolute;
+        width: calc(100% - 246px);
+        padding: 10px 123px;
+    }
+
+    .modal-video-list{
+        width: auto;
+        z-index: 20;
+
+    }
+
+}
+
+@media screen and (min-width:  996px){
+    .audio-player-toggel-list{
+        width: 50%;
+    }
+}
+
+@media screen and (min-width:  1010px){
+    .audio-player-nav__btn.video-play{
+        display: block;
+    }
 }

@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function(){
 
   const svg_play = `<svg xmlns="http://www.w3.org/2000/svg" width="55" height="80" viewBox="0 0 55 80" fill="#FFF">
@@ -304,7 +305,8 @@ Player.prototype = {
    // console.log(array)
     logo.style.height = (array[40])+"px";
     logo.style.width =  (array[40])+"px";
-    array=[...array.slice(0, 127),...array.slice(0, 127).reverse()];
+   array=[...array.slice(0, 127),...array.slice(0, 127).reverse()];
+
     var step = Math.round(array.length / self.meterNum);
     self.canvas_ctx.clearRect(0, 0, self.cwidth, self.cheight);
     self.canvas_ctx.save();
@@ -382,7 +384,7 @@ Player.prototype = {
     var flag_buf = flag_sl;
    
     if(title_len > 230){
-
+        sound_title.style.left="0%";
         if(window.sl > (-title_len)+220 && flag_sl == "left"){
           window.sl-=0.5;
           sound_title.style.transform = `translateX(${window.sl}px)`;
@@ -410,6 +412,9 @@ Player.prototype = {
           }
         }
 
+      } else{
+        sound_title.style.transform = `translateX(-50%)`;
+        sound_title.style.left="50%";
       }
 
   },
@@ -539,13 +544,16 @@ toggle_list_items.forEach(function callback(item, index) {
         video.load();
 
         if(url != "" && url != null && url != 'null'){
-          video.oncanplaythrough = function(event) {
-                 player.fadeIn(video);
-                 video_loading.style.opacity="0";
-           };
+          video.addEventListener("canplaythrough", loadVideo)
         } else{
           player.fadeIn(video);
           video_loading.style.opacity="0";
+        }
+
+        function loadVideo(){
+          player.fadeIn(video);
+          video_loading.style.opacity="0";
+          video.removeEventListener("canplaythrough", loadVideo)
         }
 
        
